@@ -24,26 +24,24 @@ var todoList = {
   toggleAll: function() {
     var totalTodos = this.todos.length;
     var completedTodos = 0;
-    
-    // Get number of completed todos by using a for loop to go through each item in the todos array and check each one's completed property and if it's true we add in 1 to the completedTodos variable.
-    for (var i = 0; i < totalTodos; i++) {
-      if (this.todos[i].completed === true) {
+    //the forEach function will run the anonymous callback function on each todo which is each element inside the todos array.
+    //instead of writing a for loop and using bracket notation for each todo element which could be more complex to understand and write 
+    //we simplified it here using the forEach method.
+    this.todos.forEach(function(todo) {
+      if (todo.completed === true) {
         completedTodos++;
       }
-    }
-    
-    //if completedTodos equals totalTodos we check for case 1 otherwise we check for case 2
-    if (completedTodos === totalTodos) {
-      // Case 1: If everything’s true, make everything false.
-      for (var i = 0; i < totalTodos; i++) {
-        this.todos[i].completed = false;
+    });
+    //we updated the for loop version into a forEach method version
+    this.todos.forEach(function(todo) {
+      if (completedTodos === totalTodos) {
+        // Case 1: If everything’s true, make everything false.
+        todo.completed = false;
+      } else {
+        // Case 2: Otherwise, make everything true.
+        todo.completed = true;
       }
-    } else {
-      // Case 2: Otherwise, make everything true.
-      for (var i = 0; i < totalTodos; i++) {
-        this.todos[i].completed = true;
-      }      
-    }
+    });
   }
 };
 
@@ -89,28 +87,31 @@ var view = {
     var todosUl = document.querySelector('ul');
     //we need to clear the ul element each time we call the displayTodo and make sure it starts from zero and adds the correct number of items that should display.
     todosUl.innerHTML = '';
-    for (var i = 0; i < todoList.todos.length; i++) {
+    
+    todoList.todos.forEach(function(todo, position) {
       var todoLi = document.createElement('li');
-      //this saves us some typing time.
-      var todo = todoList.todos[i];
       var todoTextWithCompletion = '';
-
+      
       if (todo.completed === true) {
         todoTextWithCompletion = '(x) ' + todo.todoText;
       } else {
         todoTextWithCompletion = '( ) ' + todo.todoText;
       }
       
-      //we are grabbing each items position from the for loop so that is why we are able to set the id property to i.
-      //id property unlike the class property is unique to each one so there is only one id of position i e.g. id='0', id='1' and so forth.
-      //we do this so that when we click on the delete button it will look at the id of the list item and make sure to delete the correct id position item.
-      todoLi.id = i;
+      //when the forEach method runs the callback functionthe first parameter it passes is the each element in the array(i.e. todo). there is a second parameter that is passed in
+      //which is the position of that element(i.e. position). you can say it is equivalent to position of the element in the array 'i' that we'd expect from a for loop
+      //that we'd use in bracket notation for position e.g. todoList.todosp[i]. we can call that parameter anything but in our case we will call it position
+      todoLi.id = position;
       todoLi.textContent = todoTextWithCompletion;
       //we append the delete button to each list item that gets created.
+      //the keyword this won't work here unless we pass in the second optional 'this' parameter to the callback. because the callback is not directly on the view object 
+      //like how the displayTodos function is. so when inside the displayTodos method the keyword this will refer to the view object but not for the callback function.
+      //the keyword this below is inside the callback function so in order for it to refer to the view object 
+      //we must pass in the second optional parameter 'this' to the callback function. ex. forEach(callback, this)
       todoLi.appendChild(this.createDeleteButton());
       //we append the list item to the ul. 
       todosUl.appendChild(todoLi);
-    }
+    }, this);
   },
   createDeleteButton: function() {
     var deleteButton = document.createElement('button');
