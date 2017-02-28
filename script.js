@@ -7,60 +7,53 @@ var todoList = {
     this.todos.push({
       todoText: todoText,
       completed: false
-    });
+    })
   },
   changeTodo: function(position, changeText) {
+    //grab position inside object using bracket notation and then it's todoText property and assign it with the changeText parameter
     this.todos[position].todoText = changeText;
   },
   deleteTodo: function(position) {
     //grab position parameter and always delete one item at a time
-    this.todos.splice(position,1);
+    this.todos.splice(position, 1);
   },
   toggleCompleted: function(position) {
+    //store the todos array position into to save typing
     var todo = this.todos[position];
+    
     //if completed is false make it true and vice versa
     todo.completed = !todo.completed;
   },
   toggleAll: function() {
+    //store the length of items inside the todos array 
     var totalTodos = this.todos.length;
+    
+    //completed todos starts at 0
     var completedTodos = 0;
-    //get number of completed todos
+    
+    // Get number of completed todos.
     for (var i = 0; i < totalTodos; i++) {
       if (this.todos[i].completed === true) {
         completedTodos++;
       }
     }
+    
+    //we run an if statement to see if completedTodos is equal to 
+    //totalTodos then a for loop to see what each completed property is set to
+    // Case 1: If everything’s true, make everything false.
     if (completedTodos === totalTodos) {
-      //if everything is true, make everything false
-      for (var j = 0; j < totalTodos; j++) {
-        this.todos[j].completed = false;
+      for (var i = 0; i < totalTodos; i++) {
+        this.todos[i].completed = false;
       }
+    // Case 2: Otherwise, make everything true.
     } else {
-      //if everything is false, make everything true
-      for (var k = 0; k < totalTodos; k++) {
-        this.todos[k].completed = true;
-      }
+      for (var i = 0; i < totalTodos; i++) {
+        this.todos[i].completed = true;
+      }      
     }
   }
 };
 
-// var displayTodosButton = document.getElementById('displayTodosButton');
-// var toggleAllButton = document.getElementById('toggleAllButton');
-
-// displayTodosButton.addEventListener('click', function() {
-//   todoList.displayTodos();
-// });
-
-// toggleAllButton.addEventListener('click', function() {
-//   todoList.toggleAll();
-// });
-//the above code while working can become repetitive
-//below is the refactored version of the code above
-
-//below another object is created that handles all the user interface interaction
-//of our functions from above
-//this version allows us to use the onclick attribute in our HTML 
-//as opposed to using an id attribute like in the version above.
 var handlers = {
   addTodo: function() {
     //grab the input by it's id attribute and store them into a variable
@@ -95,13 +88,17 @@ var handlers = {
   },
   deleteTodo: function() {
     var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+    
     todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+    
     deleteTodoPositionInput.value = '';
     view.displayTodos();
   },
   toggleCompleted: function() {
     var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
+    
     todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
+    
     toggleCompletedPositionInput.value = '';
     view.displayTodos();
   },
@@ -143,14 +140,19 @@ var view = {
         todoTextWithCompletion = '( ) ' + todo.todoText;
       }
       
-      //sets the todoLi textContent property to todoTextWithCompletion
-      todoLi.textContent = todoTextWithCompletion
+       //sets the todoLi textContent property to todoTextWithCompletion
+      todoLi.textContent = todoTextWithCompletion;
       
       //append the li elements into the ul
-      todosUl.appendChild(todoLi)
+      todosUl.appendChild(todoLi);
     }
   }
 };
+
+
+
+
+
 
 
 
