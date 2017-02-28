@@ -67,10 +67,8 @@ var handlers = {
     changeTodoTextInput.value = '';
     view.displayTodos();
   },
-  deleteTodo: function() {
-    var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
-    todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
-    deleteTodoPositionInput.value = '';
+  deleteTodo: function(position) {
+    todoList.deleteTodo(position);
     view.displayTodos();
   },
   toggleCompleted: function() {
@@ -121,8 +119,26 @@ var view = {
     deleteButton.className = 'deleteButton';
     //we want to return the button so that we can use it elsewhere. 
     return deleteButton;
+  },
+  setUpEventListeners: function() {
+    //instead of adding an eventListener on every delete button we can add a single eventListener to the ul element which encapsulates all the li elements.
+    var todoUl = document.querySelector('ul');
+    
+    todoUl.addEventListener('click', function(event) {
+      //whenever something on the ul is clicked like the delete button you can look at the event object to figure out what element was clicked on
+      var elementClicked = event.target;
+      //if the clicked on element is the delete button then we run the handlers delete todo method
+      if (elementClicked.className === 'deleteButton') {
+        //first we get the element clicked which is the delete button then we look at it's parent element which is the li element which then has the position id
+        //but since this is a string we pass it in the parseInt function to turn it into a number which we then pass into the handlers.deleteTodo method.
+        handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+      }
+    });
   }
 };
+
+//we run the setUpEventListeners function to get it working.
+view.setUpEventListeners();
 
 
 
